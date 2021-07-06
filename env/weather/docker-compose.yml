@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+
+  weather-db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - type: volume
+        source: weather-db-volume
+        target: /var/lib/weather-db/data
+    ports:
+      - 6666:5432
+    restart: always
+
+  weather-app:
+    build:
+      context: ../..
+    image: weather-app
+    volumes:
+      - type: volume
+        source: weather-app-volume
+        target: /var/lib/weather-app/data
+    ports:
+      - 8080:8080
+    depends_on:
+      - weather-db
+    restart: always
+
+volumes:
+  weather-db-volume:
+  weather-app-volume:
