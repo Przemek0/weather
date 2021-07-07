@@ -15,7 +15,7 @@ public class City {
     private String name;
 
     @Column(name = "zip_code", nullable = false, length = 10)
-    private String zip_code;
+    private String zipCode;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "country_id", nullable = false)
@@ -29,12 +29,12 @@ public class City {
         this.country = country;
     }
 
-    public String getZip_code() {
-        return zip_code;
+    public String getZipCode() {
+        return zipCode;
     }
 
-    public void setZip_code(String zip_code) {
-        this.zip_code = zip_code;
+    public void setZipCode(String zip_code) {
+        this.zipCode = zip_code;
     }
 
     public String getName() {
