@@ -1,8 +1,12 @@
 package pl.piwonski.weather.domain.country;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 import pl.piwonski.weather.model.Country;
+
+import java.lang.reflect.Type;
+import java.util.Optional;
 
 @Service
 public class CountryService {
@@ -18,5 +22,12 @@ public class CountryService {
         final Country country = modelMapper.map(countryDto, Country.class);
         final Country save = countryRepository.save(country);
         return modelMapper.map(save, CountryDto.class);
+    }
+
+    public Optional<CountryDto> read(int id) {
+        final Optional<Country> optCountry = countryRepository.findById(id);
+        final Type optCountryDtoType = new TypeToken<Optional<CountryDto>>() {
+        }.getType();
+        return modelMapper.map(optCountry, optCountryDtoType);
     }
 }
