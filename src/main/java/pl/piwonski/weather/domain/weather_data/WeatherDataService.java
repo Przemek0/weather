@@ -1,8 +1,12 @@
 package pl.piwonski.weather.domain.weather_data;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 import pl.piwonski.weather.model.WeatherData;
+
+import java.lang.reflect.Type;
+import java.util.Optional;
 
 @Service
 public class WeatherDataService {
@@ -18,5 +22,11 @@ public class WeatherDataService {
         final WeatherData weatherData = modelMapper.map(weatherDataDto, WeatherData.class);
         final WeatherData save = weatherDataRepository.save(weatherData);
         return modelMapper.map(save, WeatherDataDto.class);
+    }
+
+    public Optional<WeatherDataDto> read(long id) {
+        final Optional<WeatherData> optWeatherData = weatherDataRepository.findById(id);
+        final Type optWeatherDataDtoType = new TypeToken<Optional<WeatherDataDto>>() {}.getType();
+        return modelMapper.map(optWeatherData, optWeatherDataDtoType);
     }
 }
