@@ -36,4 +36,8 @@ public class CityService {
         final City save = cityRepository.save(city);
         return modelMapper.map(save, CityDto.class);
     }
+
+    public void delete(long id) {
+        cityRepository.deleteById(id);
+    }
 }

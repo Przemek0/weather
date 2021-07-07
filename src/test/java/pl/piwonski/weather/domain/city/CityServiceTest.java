@@ -15,6 +15,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CityServiceTest {
@@ -82,5 +84,16 @@ class CityServiceTest {
 
         //then
         assertSame(expectedResult, result);
+    }
+
+    @Test
+    void delete() {
+        //given
+
+        //when
+        cityService.delete(1L);
+
+        //then
+        verify(cityRepository, times(1)).deleteById(1L);
     }
 }
