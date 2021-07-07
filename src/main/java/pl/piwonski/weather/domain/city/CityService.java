@@ -29,4 +29,11 @@ public class CityService {
         final Type optCityDtoType = new TypeToken<Optional<CityDto>>() {}.getType();
         return modelMapper.map(optCity, optCityDtoType);
     }
+
+    public CityDto update(long id, CityDto newCityDto) {
+        final City city = modelMapper.map(newCityDto, City.class);
+        city.setId(id);
+        final City save = cityRepository.save(city);
+        return modelMapper.map(save, CityDto.class);
+    }
 }

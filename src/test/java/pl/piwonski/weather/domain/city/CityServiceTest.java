@@ -66,4 +66,21 @@ class CityServiceTest {
         //then
         assertSame(expectedResult, result);
     }
+
+    @Test
+    void update() {
+        //given
+        final City city = new City();
+        final CityDto expectedResult = new CityDto();
+
+        given(modelMapper.map(expectedResult, City.class)).willReturn(city);
+        given(cityRepository.save(city)).willReturn(city);
+        given(modelMapper.map(city, CityDto.class)).willReturn(expectedResult);
+
+        //when
+        final var result = cityService.update(1L, expectedResult);
+
+        //then
+        assertSame(expectedResult, result);
+    }
 }
