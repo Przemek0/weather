@@ -30,4 +30,11 @@ public class CountryService {
         }.getType();
         return modelMapper.map(optCountry, optCountryDtoType);
     }
+
+    public CountryDto update(int id, CountryDto newCountryDto) {
+        final Country country = modelMapper.map(newCountryDto, Country.class);
+        country.setId(id);
+        final Country save = countryRepository.save(country);
+        return modelMapper.map(save, CountryDto.class);
+    }
 }

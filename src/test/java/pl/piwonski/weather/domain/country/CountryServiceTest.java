@@ -37,6 +37,7 @@ class CountryServiceTest {
         //given
         final Country country = new Country();
         final CountryDto expectedResult = new CountryDto();
+
         given(modelMapper.map(expectedResult, Country.class)).willReturn(country);
         given(countryRepository.save(country)).willReturn(country);
         given(modelMapper.map(country, CountryDto.class)).willReturn(expectedResult);
@@ -52,11 +53,9 @@ class CountryServiceTest {
     void read() {
         //given
         final Country country = new Country();
-        country.setId(1);
         final Optional<Country> optCountry = Optional.of(country);
         final CountryDto countryDto = new CountryDto();
         final Optional<CountryDto> expectedResult = Optional.of(countryDto);
-
         final Type optCountryDtoType = new TypeToken<Optional<CountryDto>>() {
         }.getType();
 
@@ -65,6 +64,23 @@ class CountryServiceTest {
 
         //when
         var result = countryService.read(1);
+
+        //then
+        assertSame(expectedResult, result);
+    }
+
+    @Test
+    void update() {
+        //given
+        final Country country = new Country();
+        final CountryDto expectedResult = new CountryDto();
+
+        given(modelMapper.map(expectedResult, Country.class)).willReturn(country);
+        given(countryRepository.save(country)).willReturn(country);
+        given(modelMapper.map(country, CountryDto.class)).willReturn(expectedResult);
+
+        //when
+        var result = countryService.update(1, expectedResult);
 
         //then
         assertSame(expectedResult, result);
