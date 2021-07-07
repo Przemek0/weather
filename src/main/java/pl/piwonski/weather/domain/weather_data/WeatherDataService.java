@@ -36,4 +36,8 @@ public class WeatherDataService {
         final WeatherData save = weatherDataRepository.save(weatherData);
         return modelMapper.map(save, WeatherDataDto.class);
     }
+
+    public void delete(long id) {
+        weatherDataRepository.deleteById(id);
+    }
 }
