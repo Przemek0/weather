@@ -37,8 +37,4 @@ public class CountryService {
         final Country save = countryRepository.save(country);
         return modelMapper.map(save, CountryDto.class);
     }
-
-    public void delete(int id) {
-        countryRepository.deleteById(id);
-    }
 }
