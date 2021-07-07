@@ -1,4 +1,4 @@
-package pl.piwonski.weather.domain.weather_data;
+package pl.piwonski.weather.domain.weatherdata;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -96,5 +97,28 @@ class WeatherDataServiceTest {
 
         //then
         verify(weatherDataRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void getCurrentWeatherByCity() {
+        //given
+        final WeatherData weatherData = new WeatherData();
+        final Optional<WeatherData> optWeatherData = Optional.of(weatherData);
+        final WeatherDataDto weatherDataDto = new WeatherDataDto();
+        final Optional<WeatherDataDto> expectedResult = Optional.of(weatherDataDto);
+        final Type optWeatherDataDto = new TypeToken<Optional<WeatherDataDto>>() {}.getType();
+
+
+        given(weatherDataRepository.findFirstByCity_NameAllIgnoreCaseOrderByDateDescTimeDesc(anyString()))
+                .willReturn(optWeatherData);
+        given(modelMapper.map(optWeatherData, optWeatherDataDto))
+                .willReturn(expectedResult);
+
+        //when
+        var result = weatherDataService
+                .getCurrentWeatherByCity("City");
+
+        //then
+        assertSame(expectedResult, result);
     }
 }

@@ -40,4 +40,8 @@ public class CityService {
     public void delete(long id) {
         cityRepository.deleteById(id);
     }
+
+    public boolean existsByName(String city) {
+        return cityRepository.existsByName(city);
+    }
 }

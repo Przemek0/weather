@@ -1,5 +1,6 @@
-package pl.piwonski.weather.domain.weather_data;
+package pl.piwonski.weather.domain.weatherdata;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.piwonski.weather.domain.city.CityDto;
 import pl.piwonski.weather.model.enums.CloudCoverEnum;
@@ -11,14 +12,16 @@ import java.time.LocalTime;
 public class WeatherDataDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
+    private Long id;
 
     @PastOrPresent
     @NotNull
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date;
 
     @PastOrPresent
     @NotNull
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime time;
 
     @NotNull
@@ -41,6 +44,7 @@ public class WeatherDataDto {
     private CloudCoverEnum cloudCover;
 
     @NotNull
+    @Positive
     private CityDto city;
 
     public long getId() {
