@@ -67,4 +67,21 @@ class WeatherDataServiceTest {
         //then
         assertSame(expectedResult, result);
     }
+
+    @Test
+    void update() {
+        //given
+        final WeatherData weatherData = new WeatherData();
+        final WeatherDataDto expectedResult = new WeatherDataDto();
+
+        given(modelMapper.map(expectedResult, WeatherData.class)).willReturn(weatherData);
+        given(weatherDataRepository.save(weatherData)).willReturn(weatherData);
+        given(modelMapper.map(weatherData, WeatherDataDto.class)).willReturn(expectedResult);
+
+        //when
+        var result = weatherDataService.update(1L, expectedResult);
+
+        //then
+        assertSame(expectedResult, result);
+    }
 }

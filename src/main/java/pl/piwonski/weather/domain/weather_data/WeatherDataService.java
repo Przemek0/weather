@@ -29,4 +29,11 @@ public class WeatherDataService {
         final Type optWeatherDataDtoType = new TypeToken<Optional<WeatherDataDto>>() {}.getType();
         return modelMapper.map(optWeatherData, optWeatherDataDtoType);
     }
+
+    public WeatherDataDto update(long id, WeatherDataDto newWeatherDataDto) {
+        final WeatherData weatherData = modelMapper.map(newWeatherDataDto, WeatherData.class);
+        weatherData.setId(id);
+        final WeatherData save = weatherDataRepository.save(weatherData);
+        return modelMapper.map(save, WeatherDataDto.class);
+    }
 }
