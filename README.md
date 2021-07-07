@@ -19,8 +19,6 @@ pressure, direction of wind, speed of wind and cloud cover.
 * Spring Boot 2.5.2
     * Spring-Web
     * Spring-Data-JPA
-    * Spring-Validation
-* ModelMapper 2.4.4
   
 ### Tests
 * JUnit 5
