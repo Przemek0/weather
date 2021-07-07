@@ -6,9 +6,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import pl.piwonski.weather.model.City;
 
+import java.lang.reflect.Type;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +43,25 @@ class CityServiceTest {
 
         //when
         final var result = cityService.create(expectedResult);
+
+        //then
+        assertSame(expectedResult, result);
+    }
+
+    @Test
+    void read() {
+        //given
+        final City city = new City();
+        final Optional<City> optCity = Optional.of(city);
+        final CityDto cityDto = new CityDto();
+        final Optional<CityDto> expectedResult = Optional.of(cityDto);
+        final Type optCityDtoType = new TypeToken<Optional<CityDto>>() {}.getType();
+
+        given(cityRepository.findById(eq(1L))).willReturn(optCity);
+        given(modelMapper.map(optCity, optCityDtoType)).willReturn(expectedResult);
+
+        //when
+        final var result = cityService.read(1L);
 
         //then
         assertSame(expectedResult, result);
