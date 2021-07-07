@@ -13,9 +13,10 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CountryServiceTest {
@@ -84,5 +85,16 @@ class CountryServiceTest {
 
         //then
         assertSame(expectedResult, result);
+    }
+
+    @Test
+    void delete() {
+        //given
+
+        //when
+        countryService.delete(1);
+
+        //then
+        verify(countryRepository, times(1)).deleteById(1);
     }
 }
