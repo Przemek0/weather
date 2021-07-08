@@ -23,7 +23,7 @@ public class CityDto {
 
     @NotNull
     @Positive
-    private int country;
+    private CountryDto country;
 
     public long getId() {
         return id;
@@ -49,11 +49,11 @@ public class CityDto {
         this.zipCode = zipCode;
     }
 
-    public int getCountry() {
+    public CountryDto getCountry() {
         return country;
     }
 
-    public void setCountry(int country) {
+    public void setCountry(CountryDto country) {
         this.country = country;
     }
 }

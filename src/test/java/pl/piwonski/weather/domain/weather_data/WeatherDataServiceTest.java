@@ -57,18 +57,17 @@ class WeatherDataServiceTest {
         //given
         final WeatherData weatherData = new WeatherData();
         final Optional<WeatherData> optWeatherData = Optional.of(weatherData);
-        final WeatherDataDto weatherDataDto = new WeatherDataDto();
-        final Optional<WeatherDataDto> expectedResult = Optional.of(weatherDataDto);
-        final Type optWeatherDataDtoType = new TypeToken<Optional<WeatherDataDto>>() {}.getType();
+        final WeatherDataDto expectedResult = new WeatherDataDto();
 
         given(weatherDataRepository.findById(eq(1L))).willReturn(optWeatherData);
-        given(modelMapper.map(optWeatherData, optWeatherDataDtoType)).willReturn(expectedResult);
+        given(modelMapper.map(weatherData, WeatherDataDto.class)).willReturn(expectedResult);
 
         //when
         var result = weatherDataService.read(1L);
 
         //then
-        assertSame(expectedResult, result);
+        assertTrue(result.isPresent());
+        assertSame(expectedResult, result.get());
     }
 
     @Test
@@ -104,14 +103,12 @@ class WeatherDataServiceTest {
         //given
         final WeatherData weatherData = new WeatherData();
         final Optional<WeatherData> optWeatherData = Optional.of(weatherData);
-        final WeatherDataDto weatherDataDto = new WeatherDataDto();
-        final Optional<WeatherDataDto> expectedResult = Optional.of(weatherDataDto);
-        final Type optWeatherDataDto = new TypeToken<Optional<WeatherDataDto>>() {}.getType();
+        final WeatherDataDto expectedResult = new WeatherDataDto();
 
 
         given(weatherDataRepository.findFirstByCity_NameAllIgnoreCaseOrderByDateDescTimeDesc(anyString()))
                 .willReturn(optWeatherData);
-        given(modelMapper.map(optWeatherData, optWeatherDataDto))
+        given(modelMapper.map(weatherData, WeatherDataDto.class))
                 .willReturn(expectedResult);
 
         //when
@@ -119,6 +116,7 @@ class WeatherDataServiceTest {
                 .getCurrentWeatherByCity("City");
 
         //then
-        assertSame(expectedResult, result);
+        assertTrue(result.isPresent());
+        assertSame(expectedResult, result.get());
     }
 }

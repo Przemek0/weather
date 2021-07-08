@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import pl.piwonski.weather.domain.city.CityDto;
 import pl.piwonski.weather.domain.city.CityService;
 import pl.piwonski.weather.domain.country.CountryDto;
+import pl.piwonski.weather.model.CloudCover;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -106,7 +107,10 @@ class WeatherDataControllerTest {
         weatherDataDto.setTemperature(32.5f);
         weatherDataDto.setWindDirectionDeg(180);
         weatherDataDto.setWindSpeed(10);
-        weatherDataDto.setCloudCover(1);
+        final CloudCover cloudCover = new CloudCover();
+        cloudCover.setId(1);
+        cloudCover.setName("cloudless");
+        weatherDataDto.setCloudCover(cloudCover);
         final CityDto cityDto = new CityDto();
         cityDto.setId(1L);
         cityDto.setName("Example city");
@@ -114,9 +118,9 @@ class WeatherDataControllerTest {
         countryDto.setId(1);
         countryDto.setName("Example country");
         countryDto.setCode("EC");
-        cityDto.setCountry(1);
+        cityDto.setCountry(countryDto);
         cityDto.setZipCode("00000");
-        weatherDataDto.setCity(1L);
+        weatherDataDto.setCity(cityDto);
         return weatherDataDto;
     }
 
