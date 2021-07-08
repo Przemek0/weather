@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import pl.piwonski.weather.domain.city.CityDto;
 import pl.piwonski.weather.domain.city.CityService;
 import pl.piwonski.weather.domain.country.CountryDto;
+import pl.piwonski.weather.model.CloudCover;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -82,7 +83,7 @@ class WeatherDataControllerTest {
         given(cityService.existsByName(eq(exampleCity)))
                 .willReturn(true);
         given(weatherDataService.getCurrentWeatherByCity(eq(exampleCity)))
-                .willReturn(Optional.of(null));
+                .willReturn(Optional.of(weatherDataDto));
 
         //when
         final ResultActions resultActions = mockMvc.perform(
@@ -106,7 +107,10 @@ class WeatherDataControllerTest {
         weatherDataDto.setTemperature(32.5f);
         weatherDataDto.setWindDirectionDeg(180);
         weatherDataDto.setWindSpeed(10);
-        weatherDataDto.setCloudCoverId(1);
+        final CloudCover cloudCover = new CloudCover();
+        cloudCover.setId(1);
+        cloudCover.setName("cloudless");
+        weatherDataDto.setCloudCover(cloudCover);
         final CityDto cityDto = new CityDto();
         cityDto.setId(1L);
         cityDto.setName("Example city");

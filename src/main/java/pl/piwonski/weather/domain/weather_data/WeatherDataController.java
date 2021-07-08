@@ -20,7 +20,7 @@ public class WeatherDataController {
         this.cityService = cityService;
     }
 
-    @GetMapping("/current")
+    @GetMapping
     public WeatherDataDto getWeather(@RequestParam @NotNull String city) {
         if (!cityService.existsByName(city)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, city + " not found.");

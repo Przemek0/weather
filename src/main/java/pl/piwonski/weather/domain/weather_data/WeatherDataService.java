@@ -1,11 +1,9 @@
 package pl.piwonski.weather.domain.weather_data;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 import pl.piwonski.weather.model.WeatherData;
 
-import java.lang.reflect.Type;
 import java.util.Optional;
 
 @Service
@@ -26,7 +24,7 @@ public class WeatherDataService {
 
     public Optional<WeatherDataDto> read(long id) {
         final Optional<WeatherData> optWeatherData = weatherDataRepository.findById(id);
-        return mapOptWeatherDataToOptWeatherDataDto(optWeatherData);
+        return mapOptWD2OptWDDto(optWeatherData);
     }
 
     public WeatherDataDto update(long id, WeatherDataDto newWeatherDataDto) {
@@ -44,10 +42,10 @@ public class WeatherDataService {
         final Optional<WeatherData> optCurrentWeatherData = weatherDataRepository
                 .findFirstByCity_NameAllIgnoreCaseOrderByDateDescTimeDesc(cityName);
 
-        return mapOptWeatherDataToOptWeatherDataDto(optCurrentWeatherData);
+        return mapOptWD2OptWDDto(optCurrentWeatherData);
     }
 
-    private Optional<WeatherDataDto> mapOptWeatherDataToOptWeatherDataDto(Optional<WeatherData> optWeatherData) {
+    private Optional<WeatherDataDto> mapOptWD2OptWDDto(Optional<WeatherData> optWeatherData) {
         if (optWeatherData.isEmpty()) {
             return Optional.empty();
         }
