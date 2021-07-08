@@ -1,6 +1,5 @@
 package pl.piwonski.weather.model;
 
-import pl.piwonski.weather.model.enums.CloudCoverEnum;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -33,13 +32,23 @@ public class WeatherData {
     @Column(name = "wind_speed", nullable = false)
     private int windSpeed;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "cloud_cover", nullable = false)
-    private CloudCoverEnum cloudCover;
+
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "cloud_cover_id", nullable = false)
+    private CloudCover cloudCover;
+
+    public CloudCover getCloudCover() {
+        return cloudCover;
+    }
+
+    public void setCloudCover(CloudCover cloudCover) {
+        this.cloudCover = cloudCover;
+    }
 
     public City getCity() {
         return city;
@@ -47,14 +56,6 @@ public class WeatherData {
 
     public void setCity(City city) {
         this.city = city;
-    }
-
-    public CloudCoverEnum getCloudCover() {
-        return cloudCover;
-    }
-
-    public void setCloudCover(CloudCoverEnum cloudCoverEnum) {
-        this.cloudCover = cloudCoverEnum;
     }
 
     public int getWindSpeed() {

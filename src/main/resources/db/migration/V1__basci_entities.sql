@@ -1,5 +1,7 @@
 CREATE SEQUENCE IF NOT EXISTS city_seq START WITH 1 INCREMENT BY 1;
 
+CREATE SEQUENCE IF NOT EXISTS cloud_cover_seq START WITH 1 INCREMENT BY 1;
+
 CREATE SEQUENCE IF NOT EXISTS country_seq START WITH 1 INCREMENT BY 1;
 
 CREATE SEQUENCE IF NOT EXISTS weather_data_seq START WITH 1 INCREMENT BY 1;
@@ -11,6 +13,13 @@ CREATE TABLE city
     zip_code   VARCHAR(10)  NOT NULL,
     country_id INTEGER      NOT NULL,
     CONSTRAINT pk_city PRIMARY KEY (id)
+);
+
+CREATE TABLE cloud_cover
+(
+    id   INTEGER      NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_cloud_cover PRIMARY KEY (id)
 );
 
 CREATE TABLE country
@@ -30,10 +39,13 @@ CREATE TABLE weather_data
     atmospheric_pressure FLOAT                  NOT NULL,
     wind_direction_deg   INTEGER                NOT NULL,
     wind_speed           INTEGER                NOT NULL,
-    cloud_cover          VARCHAR(255)           NOT NULL,
     city_id              BIGINT                 NOT NULL,
+    cloud_cover_id       INTEGER                NOT NULL,
     CONSTRAINT pk_weather_data PRIMARY KEY (id)
 );
+
+ALTER TABLE cloud_cover
+    ADD CONSTRAINT uc_cloud_cover_name UNIQUE (name);
 
 ALTER TABLE country
     ADD CONSTRAINT uc_country_code UNIQUE (code);
@@ -46,3 +58,6 @@ ALTER TABLE city
 
 ALTER TABLE weather_data
     ADD CONSTRAINT FK_WEATHER_DATA_ON_CITY FOREIGN KEY (city_id) REFERENCES city (id);
+
+ALTER TABLE weather_data
+    ADD CONSTRAINT FK_WEATHER_DATA_ON_CLOUD_COVER FOREIGN KEY (cloud_cover_id) REFERENCES cloud_cover (id);

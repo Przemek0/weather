@@ -1,4 +1,4 @@
-package pl.piwonski.weather.domain.weatherdata;
+package pl.piwonski.weather.domain.weather_data;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -42,10 +42,10 @@ public class WeatherDataService {
     }
 
     public Optional<WeatherDataDto> getCurrentWeatherByCity(String cityName) {
-        final Optional<WeatherData> currentWeatherData = weatherDataRepository
+        final Optional<WeatherData> optCurrentWeatherData = weatherDataRepository
                 .findFirstByCity_NameAllIgnoreCaseOrderByDateDescTimeDesc(cityName);
         final Type optWeatherDataDto = new TypeToken<Optional<WeatherDataDto>>() {}.getType();
-        return modelMapper.map(currentWeatherData, optWeatherDataDto);
+        return modelMapper.map(optCurrentWeatherData, optWeatherDataDto);
     }
 
 }

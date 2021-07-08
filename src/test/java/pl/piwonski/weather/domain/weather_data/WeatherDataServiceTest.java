@@ -1,4 +1,4 @@
-package pl.piwonski.weather.domain.weatherdata;
+package pl.piwonski.weather.domain.weather_data;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

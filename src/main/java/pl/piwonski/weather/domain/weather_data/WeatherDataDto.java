@@ -1,9 +1,7 @@
-package pl.piwonski.weather.domain.weatherdata;
+package pl.piwonski.weather.domain.weather_data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pl.piwonski.weather.domain.city.CityDto;
-import pl.piwonski.weather.model.enums.CloudCoverEnum;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -41,17 +39,18 @@ public class WeatherDataDto {
     private int windSpeed;
 
     @NotNull
-    private CloudCoverEnum cloudCover;
+    @Positive
+    private int cloudCover;
 
     @NotNull
     @Positive
-    private CityDto city;
+    private long city;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -103,19 +102,19 @@ public class WeatherDataDto {
         this.windSpeed = windSpeed;
     }
 
-    public CloudCoverEnum getCloudCover() {
+    public int getCloudCover() {
         return cloudCover;
     }
 
-    public void setCloudCover(CloudCoverEnum cloudCover) {
+    public void setCloudCover(int cloudCover) {
         this.cloudCover = cloudCover;
     }
 
-    public CityDto getCity() {
+    public long getCity() {
         return city;
     }
 
-    public void setCity(CityDto city) {
+    public void setCity(long city) {
         this.city = city;
     }
 }

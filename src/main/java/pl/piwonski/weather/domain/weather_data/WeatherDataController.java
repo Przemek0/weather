@@ -1,4 +1,4 @@
-package pl.piwonski.weather.domain.weatherdata;
+package pl.piwonski.weather.domain.weather_data;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -20,13 +20,18 @@ public class WeatherDataController {
         this.cityService = cityService;
     }
 
-    @GetMapping
+    @GetMapping("/current")
     public WeatherDataDto getWeather(@RequestParam @NotNull String city) {
         if (!cityService.existsByName(city)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, city + " not found.");
         }
 
-        return weatherDataService.getCurrentWeatherByCity(city)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Weather for " + city + " is not found."));
+         return weatherDataService.getCurrentWeatherByCity(city).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Weather for " + city + " is not found."));
+    }
+
+    @GetMapping("/{id}")
+    public WeatherDataDto getWeather(@PathVariable long id) {
+        return weatherDataService.read(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }

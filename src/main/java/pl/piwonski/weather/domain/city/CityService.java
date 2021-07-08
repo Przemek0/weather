@@ -3,6 +3,8 @@ package pl.piwonski.weather.domain.city;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
+import pl.piwonski.weather.domain.country.CountryDto;
+import pl.piwonski.weather.domain.country.CountryService;
 import pl.piwonski.weather.model.City;
 
 import java.lang.reflect.Type;
