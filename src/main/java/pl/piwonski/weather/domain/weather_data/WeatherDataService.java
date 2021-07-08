@@ -26,8 +26,7 @@ public class WeatherDataService {
 
     public Optional<WeatherDataDto> read(long id) {
         final Optional<WeatherData> optWeatherData = weatherDataRepository.findById(id);
-        final Type optWeatherDataDtoType = new TypeToken<Optional<WeatherDataDto>>() {}.getType();
-        return modelMapper.map(optWeatherData, optWeatherDataDtoType);
+        return mapOptWeatherDataToOptWeatherDataDto(optWeatherData);
     }
 
     public WeatherDataDto update(long id, WeatherDataDto newWeatherDataDto) {
@@ -44,8 +43,17 @@ public class WeatherDataService {
     public Optional<WeatherDataDto> getCurrentWeatherByCity(String cityName) {
         final Optional<WeatherData> optCurrentWeatherData = weatherDataRepository
                 .findFirstByCity_NameAllIgnoreCaseOrderByDateDescTimeDesc(cityName);
-        final Type optWeatherDataDto = new TypeToken<Optional<WeatherDataDto>>() {}.getType();
-        return modelMapper.map(optCurrentWeatherData, optWeatherDataDto);
+
+        return mapOptWeatherDataToOptWeatherDataDto(optCurrentWeatherData);
+    }
+
+    private Optional<WeatherDataDto> mapOptWeatherDataToOptWeatherDataDto(Optional<WeatherData> optWeatherData) {
+        if (optWeatherData.isEmpty()) {
+            return Optional.empty();
+        }
+        final WeatherData weatherData = optWeatherData.get();
+        final WeatherDataDto weatherDataDto = modelMapper.map(weatherData, WeatherDataDto.class);
+        return Optional.of(weatherDataDto);
     }
 
 }

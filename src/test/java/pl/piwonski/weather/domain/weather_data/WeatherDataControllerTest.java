@@ -82,7 +82,7 @@ class WeatherDataControllerTest {
         given(cityService.existsByName(eq(exampleCity)))
                 .willReturn(true);
         given(weatherDataService.getCurrentWeatherByCity(eq(exampleCity)))
-                .willReturn(Optional.of(weatherDataDto));
+                .willReturn(Optional.of(null));
 
         //when
         final ResultActions resultActions = mockMvc.perform(
@@ -106,7 +106,7 @@ class WeatherDataControllerTest {
         weatherDataDto.setTemperature(32.5f);
         weatherDataDto.setWindDirectionDeg(180);
         weatherDataDto.setWindSpeed(10);
-        weatherDataDto.setCloudCover(1);
+        weatherDataDto.setCloudCoverId(1);
         final CityDto cityDto = new CityDto();
         cityDto.setId(1L);
         cityDto.setName("Example city");
@@ -114,9 +114,9 @@ class WeatherDataControllerTest {
         countryDto.setId(1);
         countryDto.setName("Example country");
         countryDto.setCode("EC");
-        cityDto.setCountry(1);
+        cityDto.setCountryId(1);
         cityDto.setZipCode("00000");
-        weatherDataDto.setCity(1L);
+        weatherDataDto.setCityId(1L);
         return weatherDataDto;
     }
 

@@ -26,12 +26,7 @@ public class WeatherDataController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, city + " not found.");
         }
 
-         return weatherDataService.getCurrentWeatherByCity(city).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Weather for " + city + " is not found."));
-    }
-
-    @GetMapping("/{id}")
-    public WeatherDataDto getWeather(@PathVariable long id) {
-        return weatherDataService.read(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+         return weatherDataService.getCurrentWeatherByCity(city)
+                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Weather for " + city + " is not found."));
     }
 }

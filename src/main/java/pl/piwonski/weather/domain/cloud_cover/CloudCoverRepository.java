@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import pl.piwonski.weather.model.CloudCover;
 
 public interface CloudCoverRepository extends JpaRepository<CloudCover, Integer> {
+    boolean existsByName(String name);
 }
