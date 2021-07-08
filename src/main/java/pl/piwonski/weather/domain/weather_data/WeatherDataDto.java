@@ -2,6 +2,7 @@ package pl.piwonski.weather.domain.weather_data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import pl.piwonski.weather.domain.city.CityDto;
 import pl.piwonski.weather.model.CloudCover;
 
 import javax.validation.constraints.*;
@@ -45,7 +46,7 @@ public class WeatherDataDto {
 
     @NotNull
     @Positive
-    private long cityId;
+    private CityDto city;
 
     public Long getId() {
         return id;
@@ -111,11 +112,11 @@ public class WeatherDataDto {
         this.cloudCover = cloudCover;
     }
 
-    public long getCityId() {
-        return cityId;
+    public CityDto getCity() {
+        return city;
     }
 
-    public void setCityId(long cityId) {
-        this.cityId = cityId;
+    public void setCity(CityDto city) {
+        this.city = city;
     }
 }

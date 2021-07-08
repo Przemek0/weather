@@ -118,9 +118,9 @@ class WeatherDataControllerTest {
         countryDto.setId(1);
         countryDto.setName("Example country");
         countryDto.setCode("EC");
-        cityDto.setCountryId(1);
+        cityDto.setCountry(countryDto);
         cityDto.setZipCode("00000");
-        weatherDataDto.setCityId(1L);
+        weatherDataDto.setCity(cityDto);
         return weatherDataDto;
     }
 
