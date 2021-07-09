@@ -11,12 +11,9 @@ import java.time.LocalTime;
 
 public class WeatherDataDto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long id;
-
     @PastOrPresent
     @NotNull
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate date;
 
     @PastOrPresent
@@ -47,14 +44,6 @@ public class WeatherDataDto {
     @NotNull
     @Positive
     private CityDto city;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public LocalDate getDate() {
         return date;

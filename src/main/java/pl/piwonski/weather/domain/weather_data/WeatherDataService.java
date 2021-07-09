@@ -1,9 +1,14 @@
 package pl.piwonski.weather.domain.weather_data;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import pl.piwonski.weather.model.WeatherData;
 
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,9 +45,27 @@ public class WeatherDataService {
 
     public Optional<WeatherDataDto> getCurrentWeatherByCity(String cityName) {
         final Optional<WeatherData> optCurrentWeatherData = weatherDataRepository
-                .findFirstByCity_NameAllIgnoreCaseOrderByDateDescTimeDesc(cityName);
+                .findFirstByCity_NameOrderByDateDescTimeDesc(cityName);
 
         return mapOptWD2OptWDDto(optCurrentWeatherData);
+    }
+
+    public List<WeatherDataDto> getWeatherByCityAndDate(String city, LocalDate start, LocalDate end) {
+
+        if (start == null) {
+            start = LocalDate.EPOCH;
+        }
+
+        if (end == null) {
+            end = LocalDate.now();
+        }
+
+        final List<WeatherData> listOfWeatherData = weatherDataRepository
+                .findAllByCity_NameAndDateBetweenOrderByDateDescTimeDesc(city, start, end);
+
+        final Type weatherDataDtoListType = new TypeToken<List<WeatherDataDto>>() {}.getType();
+
+        return modelMapper.map(listOfWeatherData, weatherDataDtoListType);
     }
 
     private Optional<WeatherDataDto> mapOptWD2OptWDDto(Optional<WeatherData> optWeatherData) {
@@ -53,5 +76,4 @@ public class WeatherDataService {
         final WeatherDataDto weatherDataDto = modelMapper.map(weatherData, WeatherDataDto.class);
         return Optional.of(weatherDataDto);
     }
-
 }

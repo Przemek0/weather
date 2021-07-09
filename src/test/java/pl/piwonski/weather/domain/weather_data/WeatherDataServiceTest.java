@@ -6,10 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import pl.piwonski.weather.model.WeatherData;
 
-import java.lang.reflect.Type;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -106,7 +104,7 @@ class WeatherDataServiceTest {
         final WeatherDataDto expectedResult = new WeatherDataDto();
 
 
-        given(weatherDataRepository.findFirstByCity_NameAllIgnoreCaseOrderByDateDescTimeDesc(anyString()))
+        given(weatherDataRepository.findFirstByCity_NameOrderByDateDescTimeDesc(anyString()))
                 .willReturn(optWeatherData);
         given(modelMapper.map(weatherData, WeatherDataDto.class))
                 .willReturn(expectedResult);

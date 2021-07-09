@@ -87,7 +87,7 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather")
+                get("/weather/current")
                         .param("city", exampleCity)
         );
 
@@ -100,7 +100,6 @@ class WeatherDataControllerTest {
 
     private WeatherDataDto fixtureWeatherData() {
         final WeatherDataDto weatherDataDto = new WeatherDataDto();
-        weatherDataDto.setId(1L);
         weatherDataDto.setDate(LocalDate.of(2021, 7, 7));
         weatherDataDto.setTime(LocalTime.of(14, 0));
         weatherDataDto.setAtmosphericPressure(1000);
@@ -112,10 +111,8 @@ class WeatherDataControllerTest {
         cloudCover.setName("cloudless");
         weatherDataDto.setCloudCover(cloudCover);
         final CityDto cityDto = new CityDto();
-        cityDto.setId(1L);
         cityDto.setName("Example city");
         final CountryDto countryDto = new CountryDto();
-        countryDto.setId(1);
         countryDto.setName("Example country");
         countryDto.setCode("EC");
         cityDto.setCountry(countryDto);
