@@ -2,7 +2,6 @@ package pl.piwonski.weather.domain.weather_data;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import pl.piwonski.weather.model.WeatherData;
 
