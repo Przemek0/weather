@@ -10,9 +10,6 @@ import javax.validation.constraints.Size;
 
 public class CityDto {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
-
     @NotBlank
     @Size(max = 255)
     private String name;
@@ -24,14 +21,6 @@ public class CityDto {
     @NotNull
     @Positive
     private CountryDto country;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
