@@ -26,16 +26,18 @@ public class WeatherDataController {
     @GetMapping("/current")
     public WeatherDataDto getCurrentWeather(@RequestParam @NotNull String city) {
         if (!cityService.existsByName(city)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, city + " not found.");
+            throw badRequestCityNotFound(city);
         }
 
         return weatherDataService.getCurrentWeatherByCity(city)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Weather for " + city + " is not found."));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Weather for " + city + " is not found."));
     }
 
     @GetMapping("/history")
     public List<WeatherDataDto> getWeather(
-            @RequestParam @NotNull
+            @RequestParam
                     String city,
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "dd.MM.yyyy")
@@ -45,13 +47,20 @@ public class WeatherDataController {
                     LocalDate end
     ) {
         if (!cityService.existsByName(city)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, city + " not found.");
+            throw badRequestCityNotFound(city);
         }
 
         if (start != null && end != null && start.isAfter(end)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The start date can't be after the end date.");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The start date can't be after the end date.");
         }
 
-        return weatherDataService.getWeatherByCityAndDate(city, start, end);
+        return weatherDataService.
+                getWeatherByCityAndDate(city, start, end);
+    }
+
+    private ResponseStatusException badRequestCityNotFound(String cityName) {
+        return new ResponseStatusException(HttpStatus.BAD_REQUEST, cityName + " not found.");
     }
 }
