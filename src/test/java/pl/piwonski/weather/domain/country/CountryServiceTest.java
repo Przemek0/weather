@@ -10,6 +10,7 @@ import org.modelmapper.TypeToken;
 import pl.piwonski.weather.model.Country;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,5 +97,76 @@ class CountryServiceTest {
 
         //then
         verify(countryRepository, times(1)).deleteById(1);
+    }
+
+    @Test
+    void readAll() {
+        //given
+        final List<Country> all = List.of(new Country());
+        final Type countryDtoListType = new TypeToken<List<CountryDto>>() {
+        }.getType();
+
+        final List<CountryDto> expectedResult = List.of(new CountryDto());
+
+        given(countryRepository.findAll()).willReturn(all);
+        given(modelMapper.map(all, countryDtoListType))
+                .willReturn(expectedResult);
+
+        //when
+        var result = countryService.readAll();
+
+        //then
+        assertSame(expectedResult, result);
+    }
+
+    @Test
+    void existsById() {
+        //given
+        given(countryRepository.existsById(eq(1)))
+                .willReturn(true);
+        given(countryRepository.existsById(eq(2)))
+                .willReturn(false);
+
+        //when
+        var resultTrue = countryService.existsById(1);
+        var resultFalse = countryService.existsById(2);
+
+        //then
+        assertTrue(resultTrue);
+        assertFalse(resultFalse);
+    }
+
+    @Test
+    void existsByName() {
+        //given
+        given(countryRepository.existsByName(eq("test1")))
+                .willReturn(true);
+        given(countryRepository.existsByName(eq("test2")))
+                .willReturn(false);
+
+        //when
+        var resultTrue = countryService.existsByName("test1");
+        var resultFalse = countryService.existsByName("test2");
+
+        //then
+        assertTrue(resultTrue);
+        assertFalse(resultFalse);
+    }
+
+    @Test
+    void existsByCode() {
+        //given
+        given(countryRepository.existsByCode(eq("US")))
+                .willReturn(true);
+        given(countryRepository.existsByCode(eq("PL")))
+                .willReturn(false);
+
+        //when
+        var resultTrue = countryService.existsByCode("US");
+        var resultFalse = countryService.existsByCode("PL");
+
+        //then
+        assertTrue(resultTrue);
+        assertFalse(resultFalse);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.piwonski.weather.model.Country;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,5 +41,26 @@ public class CountryService {
 
     public void delete(int id) {
         countryRepository.deleteById(id);
+    }
+
+    public List<CountryDto> readAll() {
+        final List<Country> all = countryRepository.findAll();
+
+        final Type countryDtoListType = new TypeToken<List<CountryDto>>() {
+        }.getType();
+
+        return modelMapper.map(all, countryDtoListType);
+    }
+
+    public boolean existsByName(String name) {
+        return countryRepository.existsByName(name);
+    }
+
+    public boolean existsById(int id) {
+        return countryRepository.existsById(id);
+    }
+
+    public boolean existsByCode(String code) {
+        return countryRepository.existsByCode(code);
     }
 }
