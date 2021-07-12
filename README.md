@@ -22,6 +22,7 @@ temperature, atmospheric pressure, direction of wind, speed of wind and cloud co
     * Spring-Web
     * Spring-Data-JPA
     * Spring-Validation
+    * Spring-Security
 * ModelMapper 2.4.4
 
 ### Tests
