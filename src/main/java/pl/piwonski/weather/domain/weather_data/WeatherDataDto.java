@@ -2,6 +2,7 @@ package pl.piwonski.weather.domain.weather_data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 import pl.piwonski.weather.domain.city.CityDto;
 import pl.piwonski.weather.model.CloudCover;
 
@@ -18,7 +19,7 @@ public class WeatherDataDto {
 
     @PastOrPresent
     @NotNull
-    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime time;
 
     @NotNull

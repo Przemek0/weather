@@ -84,7 +84,7 @@ public class WeatherDataService {
         LocalDate nowDate = LocalDate.now(clock);
 
         final List<WeatherData> currentWeatherDataList = weatherDataRepository
-                .findAllByCity_NameAndDateAndTimeBetweenOrderByTimeDesc(cityName, start, end, nowDate);
+                .findAllByCity_NameAndTimeBetweenAndDateOrderByTimeDesc(cityName, start, end, nowDate);
 
         final Type weatherDataDtoListType = weatherDataDtoListType();
 
