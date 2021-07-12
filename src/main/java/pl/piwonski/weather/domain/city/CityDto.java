@@ -1,6 +1,7 @@
 package pl.piwonski.weather.domain.city;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import pl.piwonski.weather.domain.country.CountryDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -8,9 +9,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 public class CityDto {
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private long id;
 
     @NotBlank
     @Size(max = 255)
@@ -22,15 +20,7 @@ public class CityDto {
 
     @NotNull
     @Positive
-    private int countryId;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    private CountryDto country;
 
     public String getName() {
         return name;
@@ -48,11 +38,11 @@ public class CityDto {
         this.zipCode = zipCode;
     }
 
-    public int getCountryId() {
-        return countryId;
+    public CountryDto getCountry() {
+        return country;
     }
 
-    public void setCountryId(int countryId) {
-        this.countryId = countryId;
+    public void setCountry(CountryDto country) {
+        this.country = country;
     }
 }
