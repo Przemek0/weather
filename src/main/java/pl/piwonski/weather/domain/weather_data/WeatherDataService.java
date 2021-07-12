@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.piwonski.weather.model.WeatherData;
 
 import java.lang.reflect.Type;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -15,10 +16,12 @@ import java.util.Optional;
 public class WeatherDataService {
     private final WeatherDataRepository weatherDataRepository;
     private final ModelMapper modelMapper;
+    private final Clock clock;
 
-    public WeatherDataService(WeatherDataRepository weatherDataRepository, ModelMapper modelMapper) {
+    public WeatherDataService(WeatherDataRepository weatherDataRepository, ModelMapper modelMapper, Clock clock) {
         this.weatherDataRepository = weatherDataRepository;
         this.modelMapper = modelMapper;
+        this.clock = clock;
     }
 
     public WeatherDataDto create(WeatherDataDto weatherDataDto) {
@@ -78,7 +81,7 @@ public class WeatherDataService {
             end = LocalTime.MAX;
         }
 
-        LocalDate nowDate = LocalDate.now();
+        LocalDate nowDate = LocalDate.now(clock);
 
         final List<WeatherData> currentWeatherDataList = weatherDataRepository
                 .findAllByCity_NameAndDateAndTimeBetweenOrderByTimeDesc(cityName, start, end, nowDate);

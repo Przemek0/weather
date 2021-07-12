@@ -10,7 +10,7 @@ import org.modelmapper.TypeToken;
 import pl.piwonski.weather.model.WeatherData;
 
 import java.lang.reflect.Type;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +29,15 @@ class WeatherDataServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
+    @Mock
+    private Clock clock;
+
     private WeatherDataService weatherDataService;
 
     @BeforeEach
     void setUp() {
-        weatherDataService = new WeatherDataService(weatherDataRepository, modelMapper);
+        clock = Clock.fixed(Instant.parse("2021-07-07T23:59:59Z"), ZoneId.of("UTC"));
+        weatherDataService = new WeatherDataService(weatherDataRepository, modelMapper, clock);
     }
 
     @Test
@@ -131,15 +135,16 @@ class WeatherDataServiceTest {
         LocalDate start = null;
         LocalDate end = null;
         final String cityName = "City";
-        final Type weatherDataDtoListType = new TypeToken<List<WeatherDataDto>>() {}.getType();
-        final List<WeatherData> weatherDataList = List.of(new WeatherData());
-        final List<WeatherDataDto> expectedResult = List.of(new WeatherDataDto());
+        final Type weatherDataDtoListType = getWeatherDataDtoListType();
+        final List<WeatherData> weatherDataList = getWeatherDataList();
+        final List<WeatherDataDto> expectedResult = getExpectedResult();
 
         given(weatherDataRepository
                 .findAllByCity_NameAndDateBetweenOrderByDateDescTimeDesc(
                         eq(cityName), any(LocalDate.class), any(LocalDate.class)
                 )
         ).willReturn(weatherDataList);
+
         given(modelMapper.map(weatherDataList, weatherDataDtoListType))
                 .willReturn(expectedResult);
 
@@ -148,5 +153,44 @@ class WeatherDataServiceTest {
 
         //then
         assertSame(expectedResult, result);
+    }
+
+    @Test
+    void getCurrentWeatherByCityAndTime() {
+        //given
+        LocalTime start = null;
+        LocalTime end = null;
+        final String cityName = "City";
+        final Type weatherDataDtoListType = getWeatherDataDtoListType();
+        final List<WeatherData> weatherDataList = getWeatherDataList();
+        final List<WeatherDataDto> expectedResult = getExpectedResult();
+
+        given(weatherDataRepository
+                .findAllByCity_NameAndDateAndTimeBetweenOrderByTimeDesc(
+                        eq(cityName), any(LocalTime.class), any(LocalTime.class), any(LocalDate.class)
+                )
+        ).willReturn(weatherDataList);
+
+        given(modelMapper.map(weatherDataList, weatherDataDtoListType))
+                .willReturn(expectedResult);
+
+        //when
+        var result = weatherDataService.getCurrentWeatherByCityAndTime(cityName, start, end);
+
+        //then
+        assertSame(expectedResult, result);
+    }
+
+    private List<WeatherDataDto> getExpectedResult() {
+        return List.of(new WeatherDataDto());
+    }
+
+    private List<WeatherData> getWeatherDataList() {
+        return List.of(new WeatherData());
+    }
+
+    private Type getWeatherDataDtoListType() {
+        return new TypeToken<List<WeatherDataDto>>() {
+        }.getType();
     }
 }

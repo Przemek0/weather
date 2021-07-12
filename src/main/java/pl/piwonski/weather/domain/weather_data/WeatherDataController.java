@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.piwonski.weather.domain.city.CityService;
 
 import javax.validation.constraints.NotNull;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -34,13 +35,7 @@ public class WeatherDataController {
                         "Weather for " + city + " is not found."));
     }
 
-    private void ifCityNotFoundThrowBadRequest(@RequestParam @NotNull String city) {
-        if (!cityService.existsByName(city)) {
-            throw badRequestCityNotFound(city);
-        }
-    }
-
-    @GetMapping("/current")
+    @GetMapping("/current/time")
     public List<WeatherDataDto> getCurrentWeatherByTime(
             @RequestParam
                     String city,
@@ -88,5 +83,11 @@ public class WeatherDataController {
 
     private ResponseStatusException badRequestCityNotFound(String cityName) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, cityName + " not found.");
+    }
+
+    private void ifCityNotFoundThrowBadRequest(@RequestParam @NotNull String city) {
+        if (!cityService.existsByName(city)) {
+            throw badRequestCityNotFound(city);
+        }
     }
 }
