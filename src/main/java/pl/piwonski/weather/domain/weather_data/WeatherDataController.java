@@ -8,13 +8,12 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.piwonski.weather.domain.city.CityService;
 
 import javax.validation.constraints.NotNull;
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/weather")
+@RequestMapping("/weathers")
 @Validated
 public class WeatherDataController {
     private final WeatherDataService weatherDataService;
@@ -27,7 +26,7 @@ public class WeatherDataController {
 
     @GetMapping("/current")
     public WeatherDataDto getCurrentWeather(@RequestParam @NotNull String city) {
-        ifCityNotFoundThrowBadRequest(city);
+        ifCityNotExistsThrowNotFound(city);
 
         return weatherDataService.getCurrentWeatherByCity(city)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -40,13 +39,13 @@ public class WeatherDataController {
             @RequestParam
                     String city,
             @RequestParam(required = false)
-            @DateTimeFormat(pattern = "HH:mm:ss")
+            @DateTimeFormat(pattern = "HH:mm")
                     LocalTime start,
             @RequestParam(required = false)
-            @DateTimeFormat(pattern = "HH:mm:ss")
+            @DateTimeFormat(pattern = "HH:mm")
                     LocalTime end
     ) {
-        ifCityNotFoundThrowBadRequest(city);
+        ifCityNotExistsThrowNotFound(city);
 
         if (start != null && end != null && start.isAfter(end)) {
             throw new ResponseStatusException(
@@ -69,7 +68,7 @@ public class WeatherDataController {
             @DateTimeFormat(pattern = "dd.MM.yyyy")
                     LocalDate end
     ) {
-        ifCityNotFoundThrowBadRequest(city);
+        ifCityNotExistsThrowNotFound(city);
 
         if (start != null && end != null && start.isAfter(end)) {
             throw new ResponseStatusException(
@@ -81,13 +80,9 @@ public class WeatherDataController {
                 getWeatherByCityAndDate(city, start, end);
     }
 
-    private ResponseStatusException badRequestCityNotFound(String cityName) {
-        return new ResponseStatusException(HttpStatus.BAD_REQUEST, cityName + " not found.");
-    }
-
-    private void ifCityNotFoundThrowBadRequest(@RequestParam @NotNull String city) {
+    private void ifCityNotExistsThrowNotFound(String city) {
         if (!cityService.existsByName(city)) {
-            throw badRequestCityNotFound(city);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, city + " not found.");
         }
     }
 }

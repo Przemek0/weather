@@ -48,13 +48,13 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/current")
+                get("/weathers/current")
                         .param("city", cityName)
         );
 
         //then
         resultActions
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -68,7 +68,7 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/current")
+                get("/weathers/current")
                         .param("city", exampleCity)
         );
 
@@ -91,7 +91,7 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/current")
+                get("/weathers/current")
                         .param("city", cityName)
         );
 
@@ -103,7 +103,7 @@ class WeatherDataControllerTest {
     }
 
     @Test
-    void getHistoryWeatherReturnsBadRequestCityNotFound() throws Exception {
+    void getHistoryWeatherReturnsNotFound() throws Exception {
         //given
         final String cityName = "City";
         given(cityService.existsByName(eq(cityName)))
@@ -111,13 +111,13 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/history")
+                get("/weathers/history")
                         .param("city", cityName)
         );
 
         //then
         resultActions
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -132,7 +132,7 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/history")
+                get("/weathers/history")
                         .param("city", cityName)
                         .param("start", "30.06.2021")
                         .param("end", "01.05.2021")
@@ -159,7 +159,7 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/history")
+                get("/weathers/history")
                         .param("city", cityName)
         );
 
@@ -171,7 +171,7 @@ class WeatherDataControllerTest {
     }
 
     @Test
-    void getCurrentWeatherByTimeReturnsBadRequestCityNotFound() throws Exception {
+    void getCurrentWeatherByTimeReturnsNotFound() throws Exception {
         //given
         final String cityName = "City";
 
@@ -180,17 +180,17 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/current/time")
+                get("/weathers/current/time")
                         .param("city", cityName)
         );
 
         //then
         resultActions
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void getCurrentWeatherByTimeReturnsBadRequestWrongDate() throws Exception {
+    void getCurrentWeatherByTimeReturnsBadRequestWrongTime() throws Exception {
         //given
         final String cityName = "City";
         final LocalTime start = LocalTime.MAX;
@@ -201,10 +201,10 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/current/time")
+                get("/weathers/current/time")
                         .param("city", cityName)
-                        .param("start", "23:59:59")
-                        .param("end", "00:00:00")
+                        .param("start", "23:59")
+                        .param("end", "00:00")
         );
 
         //then
@@ -227,10 +227,10 @@ class WeatherDataControllerTest {
 
         //when
         final ResultActions resultActions = mockMvc.perform(
-                get("/weather/current/time")
+                get("/weathers/current/time")
                         .param("city", cityName)
-                        .param("start", "00:00:00")
-                        .param("end", "23:59:59")
+                        .param("start", "00:00")
+                        .param("end", "23:59")
         );
 
         //then

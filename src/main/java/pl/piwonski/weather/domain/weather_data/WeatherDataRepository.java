@@ -14,5 +14,5 @@ public interface WeatherDataRepository extends JpaRepository<WeatherData, Long> 
 
     List<WeatherData> findAllByCity_NameAndDateBetweenOrderByDateDescTimeDesc(String cityName, LocalDate from, LocalDate to);
 
-    List<WeatherData> findAllByCity_NameAndDateAndTimeBetweenOrderByTimeDesc(String cityName, LocalTime start, LocalTime end, LocalDate nowDate);
+    List<WeatherData> findAllByCity_NameAndTimeBetweenAndDateOrderByTimeDesc(String cityName, LocalTime start, LocalTime end, LocalDate nowDate);
 }
