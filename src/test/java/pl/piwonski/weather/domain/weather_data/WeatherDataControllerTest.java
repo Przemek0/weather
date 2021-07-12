@@ -17,9 +17,9 @@ import java.time.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -216,21 +216,21 @@ class WeatherDataControllerTest {
     void getCurrentWeatherByTimeReturnsListOfWeather() throws Exception {
         //given
         final String cityName = "City";
-        final LocalTime start = LocalTime.MAX;
-        final LocalTime end = LocalTime.MIN;
 
         final List<WeatherDataDto> weatherDataDtoList = List.of(fixtureWeatherData());
         final String json = objectMapper.writeValueAsString(weatherDataDtoList);
 
         given(cityService.existsByName(eq(cityName)))
                 .willReturn(true);
-        given(weatherDataService.getCurrentWeatherByCityAndTime(cityName, start, end))
+        given(weatherDataService.getCurrentWeatherByCityAndTime(eq(cityName), any(LocalTime.class), any(LocalTime.class)))
                 .willReturn(weatherDataDtoList);
 
         //when
         final ResultActions resultActions = mockMvc.perform(
                 get("/weather/current/time")
                         .param("city", cityName)
+                        .param("start", "00:00:00")
+                        .param("end", "23:59:59")
         );
 
         //then

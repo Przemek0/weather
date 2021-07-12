@@ -165,6 +165,8 @@ class WeatherDataServiceTest {
         final List<WeatherData> weatherDataList = getWeatherDataList();
         final List<WeatherDataDto> expectedResult = getExpectedResult();
 
+        final LocalDate nowDate = LocalDate.now(clock);
+
         given(weatherDataRepository
                 .findAllByCity_NameAndDateAndTimeBetweenOrderByTimeDesc(
                         eq(cityName), any(LocalTime.class), any(LocalTime.class), any(LocalDate.class)
