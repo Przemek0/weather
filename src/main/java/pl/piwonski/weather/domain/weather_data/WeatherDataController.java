@@ -8,7 +8,9 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.piwonski.weather.domain.city.CityService;
 
 import javax.validation.constraints.NotNull;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -25,14 +27,35 @@ public class WeatherDataController {
 
     @GetMapping("/current")
     public WeatherDataDto getCurrentWeather(@RequestParam @NotNull String city) {
-        if (!cityService.existsByName(city)) {
-            throw badRequestCityNotFound(city);
-        }
+        ifCityNotFoundThrowBadRequest(city);
 
         return weatherDataService.getCurrentWeatherByCity(city)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Weather for " + city + " is not found."));
+    }
+
+    @GetMapping("/current/time")
+    public List<WeatherDataDto> getCurrentWeatherByTime(
+            @RequestParam
+                    String city,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "HH:mm:ss")
+                    LocalTime start,
+            @RequestParam(required = false)
+            @DateTimeFormat(pattern = "HH:mm:ss")
+                    LocalTime end
+    ) {
+        ifCityNotFoundThrowBadRequest(city);
+
+        if (start != null && end != null && start.isAfter(end)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The start time can't be after the end time.");
+        }
+
+        return weatherDataService.
+                getCurrentWeatherByCityAndTime(city, start, end);
     }
 
     @GetMapping("/history")
@@ -46,9 +69,7 @@ public class WeatherDataController {
             @DateTimeFormat(pattern = "dd.MM.yyyy")
                     LocalDate end
     ) {
-        if (!cityService.existsByName(city)) {
-            throw badRequestCityNotFound(city);
-        }
+        ifCityNotFoundThrowBadRequest(city);
 
         if (start != null && end != null && start.isAfter(end)) {
             throw new ResponseStatusException(
@@ -62,5 +83,11 @@ public class WeatherDataController {
 
     private ResponseStatusException badRequestCityNotFound(String cityName) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, cityName + " not found.");
+    }
+
+    private void ifCityNotFoundThrowBadRequest(@RequestParam @NotNull String city) {
+        if (!cityService.existsByName(city)) {
+            throw badRequestCityNotFound(city);
+        }
     }
 }

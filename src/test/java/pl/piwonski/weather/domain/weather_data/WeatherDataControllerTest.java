@@ -13,11 +13,11 @@ import pl.piwonski.weather.domain.city.CityService;
 import pl.piwonski.weather.domain.country.CountryDto;
 import pl.piwonski.weather.model.CloudCover;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -103,7 +103,7 @@ class WeatherDataControllerTest {
     }
 
     @Test
-    void getHistoryWeatherReturnsBadRequest() throws Exception {
+    void getHistoryWeatherReturnsBadRequestCityNotFound() throws Exception {
         //given
         final String cityName = "City";
         given(cityService.existsByName(eq(cityName)))
@@ -169,6 +169,77 @@ class WeatherDataControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(json));
     }
+
+    @Test
+    void getCurrentWeatherByTimeReturnsBadRequestCityNotFound() throws Exception {
+        //given
+        final String cityName = "City";
+
+        given(cityService.existsByName(eq(cityName)))
+                .willReturn(false);
+
+        //when
+        final ResultActions resultActions = mockMvc.perform(
+                get("/weather/current/time")
+                        .param("city", cityName)
+        );
+
+        //then
+        resultActions
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getCurrentWeatherByTimeReturnsBadRequestWrongDate() throws Exception {
+        //given
+        final String cityName = "City";
+        final LocalTime start = LocalTime.MAX;
+        final LocalTime end = LocalTime.MIN;
+
+        given(cityService.existsByName(eq(cityName)))
+                .willReturn(true);
+
+        //when
+        final ResultActions resultActions = mockMvc.perform(
+                get("/weather/current/time")
+                        .param("city", cityName)
+                        .param("start", "23:59:59")
+                        .param("end", "00:00:00")
+        );
+
+        //then
+        resultActions
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getCurrentWeatherByTimeReturnsListOfWeather() throws Exception {
+        //given
+        final String cityName = "City";
+
+        final List<WeatherDataDto> weatherDataDtoList = List.of(fixtureWeatherData());
+        final String json = objectMapper.writeValueAsString(weatherDataDtoList);
+
+        given(cityService.existsByName(eq(cityName)))
+                .willReturn(true);
+        given(weatherDataService.getCurrentWeatherByCityAndTime(eq(cityName), any(LocalTime.class), any(LocalTime.class)))
+                .willReturn(weatherDataDtoList);
+
+        //when
+        final ResultActions resultActions = mockMvc.perform(
+                get("/weather/current/time")
+                        .param("city", cityName)
+                        .param("start", "00:00:00")
+                        .param("end", "23:59:59")
+        );
+
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(json));
+    }
+
 
     private WeatherDataDto fixtureWeatherData() {
         final WeatherDataDto weatherDataDto = new WeatherDataDto();

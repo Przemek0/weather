@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import pl.piwonski.weather.model.WeatherData;
 
 import java.lang.reflect.Type;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +16,12 @@ import java.util.Optional;
 public class WeatherDataService {
     private final WeatherDataRepository weatherDataRepository;
     private final ModelMapper modelMapper;
+    private final Clock clock;
 
-    public WeatherDataService(WeatherDataRepository weatherDataRepository, ModelMapper modelMapper) {
+    public WeatherDataService(WeatherDataRepository weatherDataRepository, ModelMapper modelMapper, Clock clock) {
         this.weatherDataRepository = weatherDataRepository;
         this.modelMapper = modelMapper;
+        this.clock = clock;
     }
 
     public WeatherDataDto create(WeatherDataDto weatherDataDto) {
@@ -49,7 +53,7 @@ public class WeatherDataService {
         return mapOptWD2OptWDDto(optCurrentWeatherData);
     }
 
-    public List<WeatherDataDto> getWeatherByCityAndDate(String city, LocalDate start, LocalDate end) {
+    public List<WeatherDataDto> getWeatherByCityAndDate(String cityName, LocalDate start, LocalDate end) {
 
         if (start == null) {
             start = LocalDate.EPOCH;
@@ -59,12 +63,36 @@ public class WeatherDataService {
             end = LocalDate.now();
         }
 
-        final List<WeatherData> listOfWeatherData = weatherDataRepository
-                .findAllByCity_NameAndDateBetweenOrderByDateDescTimeDesc(city, start, end);
+        final List<WeatherData> weatherDataList = weatherDataRepository
+                .findAllByCity_NameAndDateBetweenOrderByDateDescTimeDesc(cityName, start, end);
 
-        final Type weatherDataDtoListType = new TypeToken<List<WeatherDataDto>>() {}.getType();
+        final Type weatherDataDtoListType = weatherDataDtoListType();
 
-        return modelMapper.map(listOfWeatherData, weatherDataDtoListType);
+        return modelMapper.map(weatherDataList, weatherDataDtoListType);
+    }
+
+    public List<WeatherDataDto> getCurrentWeatherByCityAndTime(String cityName, LocalTime start, LocalTime end) {
+
+        if (start == null) {
+            start = LocalTime.MIN;
+        }
+
+        if (end == null) {
+            end = LocalTime.MAX;
+        }
+
+        LocalDate nowDate = LocalDate.now(clock);
+
+        final List<WeatherData> currentWeatherDataList = weatherDataRepository
+                .findAllByCity_NameAndDateAndTimeBetweenOrderByTimeDesc(cityName, start, end, nowDate);
+
+        final Type weatherDataDtoListType = weatherDataDtoListType();
+
+        return modelMapper.map(currentWeatherDataList, weatherDataDtoListType);
+    }
+
+    private Type weatherDataDtoListType() {
+        return new TypeToken<List<WeatherDataDto>>() {}.getType();
     }
 
     private Optional<WeatherDataDto> mapOptWD2OptWDDto(Optional<WeatherData> optWeatherData) {
