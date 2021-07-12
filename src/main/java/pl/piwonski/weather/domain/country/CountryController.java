@@ -22,6 +22,7 @@ public class CountryController {
     }
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public CountryDto createCountry(@RequestBody @Valid CountryDto countryDto) {
         ifCountryNameExistsThrowBadRequest(countryDto.getName());
         ifCountryCodeExistsThrowBadRequest(countryDto.getCode());
