@@ -2,7 +2,6 @@ package pl.piwonski.weather.domain.cloud_cover;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import pl.piwonski.weather.model.CloudCover;
 
 import javax.annotation.PostConstruct;
