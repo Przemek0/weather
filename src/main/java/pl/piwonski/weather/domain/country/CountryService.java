@@ -19,16 +19,21 @@ public class CountryService {
     }
 
     public CountryDto create(CountryDto countryDto) {
-        final Country country = modelMapper.map(countryDto, Country.class);
-        final Country save = countryRepository.save(country);
-        return modelMapper.map(save, CountryDto.class);
+        final Country mappedCountry = modelMapper.map(countryDto, Country.class);
+        final Country savedCountry = countryRepository.save(mappedCountry);
+        return modelMapper.map(savedCountry, CountryDto.class);
     }
 
     public Optional<CountryDto> read(int id) {
         final Optional<Country> optCountry = countryRepository.findById(id);
-        final Type optCountryDtoType = new TypeToken<Optional<CountryDto>>() {
-        }.getType();
-        return modelMapper.map(optCountry, optCountryDtoType);
+
+        if (optCountry.isPresent()) {
+            final Country country = optCountry.get();
+            final CountryDto mappedCountryDto = modelMapper.map(country, CountryDto.class);
+            return Optional.of(mappedCountryDto);
+        }
+
+        return Optional.empty();
     }
 
     public CountryDto update(int id, CountryDto newCountryDto) {

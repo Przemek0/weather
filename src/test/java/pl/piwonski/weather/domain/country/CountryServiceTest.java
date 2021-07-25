@@ -34,7 +34,7 @@ class CountryServiceTest {
     }
 
     @Test
-    void create() {
+    void shouldCreateCountryAndReturnCountryDto() {
         //given
         final Country country = new Country();
         final CountryDto expectedResult = new CountryDto();
@@ -51,27 +51,41 @@ class CountryServiceTest {
     }
 
     @Test
-    void read() {
+    void shouldReadCountryAndReturnOptionalOfCountryDto() {
         //given
         final Country country = new Country();
         final Optional<Country> optCountry = Optional.of(country);
-        final CountryDto countryDto = new CountryDto();
-        final Optional<CountryDto> expectedResult = Optional.of(countryDto);
-        final Type optCountryDtoType = new TypeToken<Optional<CountryDto>>() {
-        }.getType();
+        final CountryDto expectedResult = new CountryDto();
+        final Optional<CountryDto> optCountryDto = Optional.of(expectedResult);
 
-        given(countryRepository.findById(eq(1))).willReturn(optCountry);
-        given(modelMapper.map(optCountry, optCountryDtoType)).willReturn(expectedResult);
+        given(countryRepository.findById(eq(1)))
+                .willReturn(optCountry);
+        given(modelMapper.map(eq(country), eq(CountryDto.class)))
+                .willReturn(expectedResult);
 
         //when
         var result = countryService.read(1);
 
         //then
-        assertSame(expectedResult, result);
+        assertTrue(result.isPresent());
+        assertSame(expectedResult, result.get());
     }
 
     @Test
-    void update() {
+    void shouldReadCountryAndReturnEmptyOptional() {
+        //given
+        given(countryRepository.findById(eq(1)))
+                .willReturn(Optional.empty());
+
+        //when
+        var result = countryService.read(1);
+
+        //then
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void shouldUpdateCountryAndReturnCountryDto() {
         //given
         final Country country = new Country();
         final CountryDto expectedResult = new CountryDto();
@@ -88,7 +102,7 @@ class CountryServiceTest {
     }
 
     @Test
-    void delete() {
+    void verifyDeleteByIdNumberOfInvocationsEqualsOne() {
         //given
 
         //when
