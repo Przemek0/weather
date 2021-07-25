@@ -26,6 +26,7 @@ public class WeatherDataController {
 
     @GetMapping("/current")
     public WeatherDataDto getCurrentWeather(@RequestParam @NotNull String city) {
+
         ifCityNotExistsThrowNotFound(city);
 
         return weatherDataService.getCurrentWeatherByCity(city)

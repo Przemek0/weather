@@ -34,14 +34,17 @@ class CityServiceTest {
     }
 
     @Test
-    void create() {
+    void shouldReturnCityDto() {
         //given
         final City city = new City();
         final CityDto expectedResult = new CityDto();
 
-        given(modelMapper.map(expectedResult, City.class)).willReturn(city);
-        given(cityRepository.save(city)).willReturn(city);
-        given(modelMapper.map(city, CityDto.class)).willReturn(expectedResult);
+        given(modelMapper.map(expectedResult, City.class))
+                .willReturn(city);
+        given(cityRepository.save(city))
+                .willReturn(city);
+        given(modelMapper.map(city, CityDto.class))
+                .willReturn(expectedResult);
 
         //when
         final var result = cityService.create(expectedResult);
@@ -51,26 +54,42 @@ class CityServiceTest {
     }
 
     @Test
-    void read() {
+    void shouldReturnOptionalOfCityDto() {
         //given
         final City city = new City();
         final Optional<City> optCity = Optional.of(city);
-        final CityDto cityDto = new CityDto();
-        final Optional<CityDto> expectedResult = Optional.of(cityDto);
-        final Type optCityDtoType = new TypeToken<Optional<CityDto>>() {}.getType();
+        final CityDto expectedResult = new CityDto();
+        final Optional<CityDto> optCityDto = Optional.of(expectedResult);
 
-        given(cityRepository.findById(eq(1L))).willReturn(optCity);
-        given(modelMapper.map(optCity, optCityDtoType)).willReturn(expectedResult);
+        given(cityRepository.findById(eq(1L)))
+                .willReturn(optCity);
+        given(modelMapper.map(city, CityDto.class))
+                .willReturn(expectedResult);
 
         //when
         final var result = cityService.read(1L);
 
         //then
-        assertSame(expectedResult, result);
+        assertTrue(result.isPresent());
+        assertSame(expectedResult, result.get());
     }
 
     @Test
-    void update() {
+    void shouldReturnEmptyOptional() {
+        //given
+
+        given(cityRepository.findById(eq(1L)))
+                .willReturn(Optional.empty());
+
+        //when
+        final var result = cityService.read(1L);
+
+        //then
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void shouldReturnUpdatedCityMappedToCityDto() {
         //given
         final City city = new City();
         final CityDto expectedResult = new CityDto();
@@ -87,7 +106,7 @@ class CityServiceTest {
     }
 
     @Test
-    void delete() {
+    void verifyNumberOfInvocationsOfDeleteByIdEqualsOne() {
         //given
 
         //when
