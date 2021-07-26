@@ -134,8 +134,8 @@ class WeatherDataControllerTest {
         final ResultActions resultActions = mockMvc.perform(
                 get("/weathers/history")
                         .param("city", cityName)
-                        .param("start", "30.06.2021")
-                        .param("end", "01.05.2021")
+                        .param("startDate", "30.06.2021")
+                        .param("endDate", "01.05.2021")
         );
 
         //then
@@ -203,8 +203,8 @@ class WeatherDataControllerTest {
         final ResultActions resultActions = mockMvc.perform(
                 get("/weathers/current/time")
                         .param("city", cityName)
-                        .param("start", "23:59")
-                        .param("end", "00:00")
+                        .param("startTime", "23:59")
+                        .param("endTime", "00:00")
         );
 
         //then
@@ -229,8 +229,8 @@ class WeatherDataControllerTest {
         final ResultActions resultActions = mockMvc.perform(
                 get("/weathers/current/time")
                         .param("city", cityName)
-                        .param("start", "00:00")
-                        .param("end", "23:59")
+                        .param("startTime", "00:00")
+                        .param("endTime", "23:59")
         );
 
         //then
