@@ -41,21 +41,21 @@ public class WeatherDataController {
                     String city,
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "HH:mm")
-                    LocalTime start,
+                    LocalTime startTime,
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "HH:mm")
-                    LocalTime end
+                    LocalTime endTime
     ) {
         ifCityNotExistsThrowNotFound(city);
 
-        if (start != null && end != null && start.isAfter(end)) {
+        if (startTime != null && endTime != null && startTime.isAfter(endTime)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "The start time can't be after the end time.");
         }
 
         return weatherDataService.
-                getCurrentWeatherByCityAndTime(city, start, end);
+                getCurrentWeatherByCityAndTime(city, startTime, endTime);
     }
 
     @GetMapping("/history")
@@ -64,21 +64,21 @@ public class WeatherDataController {
                     String city,
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "dd.MM.yyyy")
-                    LocalDate start,
+                    LocalDate startDate,
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "dd.MM.yyyy")
-                    LocalDate end
+                    LocalDate endDate
     ) {
         ifCityNotExistsThrowNotFound(city);
 
-        if (start != null && end != null && start.isAfter(end)) {
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "The start date can't be after the end date.");
         }
 
         return weatherDataService.
-                getWeatherByCityAndDate(city, start, end);
+                getWeatherByCityAndDate(city, startDate, endDate);
     }
 
     private void ifCityNotExistsThrowNotFound(String city) {

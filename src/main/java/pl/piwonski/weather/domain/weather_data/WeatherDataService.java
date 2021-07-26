@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WeatherDataService {
@@ -32,14 +33,14 @@ public class WeatherDataService {
 
     public Optional<WeatherDataDto> read(long id) {
         final Optional<WeatherData> optWeatherData = weatherDataRepository.findById(id);
-        return mapOptWD2OptWDDto(optWeatherData);
+        return mapOptWeatherDataToOptWeatherDataDto(optWeatherData);
     }
 
     public WeatherDataDto update(long id, WeatherDataDto newWeatherDataDto) {
-        final WeatherData weatherData = modelMapper.map(newWeatherDataDto, WeatherData.class);
-        weatherData.setId(id);
-        final WeatherData save = weatherDataRepository.save(weatherData);
-        return modelMapper.map(save, WeatherDataDto.class);
+        final WeatherData mappedWeatherData = modelMapper.map(newWeatherDataDto, WeatherData.class);
+        mappedWeatherData.setId(id);
+        final WeatherData savedWeatherData = weatherDataRepository.save(mappedWeatherData);
+        return modelMapper.map(savedWeatherData, WeatherDataDto.class);
     }
 
     public void delete(long id) {
@@ -50,57 +51,57 @@ public class WeatherDataService {
         final Optional<WeatherData> optCurrentWeatherData = weatherDataRepository
                 .findFirstByCity_NameOrderByDateDescTimeDesc(cityName);
 
-        return mapOptWD2OptWDDto(optCurrentWeatherData);
+        return mapOptWeatherDataToOptWeatherDataDto(optCurrentWeatherData);
     }
 
-    public List<WeatherDataDto> getWeatherByCityAndDate(String cityName, LocalDate start, LocalDate end) {
+    public List<WeatherDataDto> getWeatherByCityAndDate(String cityName, LocalDate startDate, LocalDate endDate) {
 
-        if (start == null) {
-            start = LocalDate.EPOCH;
+        if (startDate == null) {
+            startDate = LocalDate.EPOCH;
         }
 
-        if (end == null) {
-            end = LocalDate.now();
+        if (endDate == null) {
+            endDate = LocalDate.now();
         }
 
         final List<WeatherData> weatherDataList = weatherDataRepository
-                .findAllByCity_NameAndDateBetweenOrderByDateDescTimeDesc(cityName, start, end);
+                .findAllByCity_NameAndDateBetweenOrderByDateDescTimeDesc(cityName, startDate, endDate);
 
-        final Type weatherDataDtoListType = weatherDataDtoListType();
-
-        return modelMapper.map(weatherDataList, weatherDataDtoListType);
+        return mapWeatherDataListToWeatherDataDtoList(weatherDataList);
     }
 
-    public List<WeatherDataDto> getCurrentWeatherByCityAndTime(String cityName, LocalTime start, LocalTime end) {
+    public List<WeatherDataDto> getCurrentWeatherByCityAndTime(String cityName, LocalTime startTime, LocalTime endTime) {
 
-        if (start == null) {
-            start = LocalTime.MIN;
+        if (startTime == null) {
+            startTime = LocalTime.MIN;
         }
 
-        if (end == null) {
-            end = LocalTime.MAX;
+        if (endTime == null) {
+            endTime = LocalTime.MAX;
         }
 
         LocalDate nowDate = LocalDate.now(clock);
 
         final List<WeatherData> currentWeatherDataList = weatherDataRepository
-                .findAllByCity_NameAndTimeBetweenAndDateOrderByTimeDesc(cityName, start, end, nowDate);
+                .findAllByCity_NameAndTimeBetweenAndDateOrderByTimeDesc(cityName, startTime, endTime, nowDate);
 
-        final Type weatherDataDtoListType = weatherDataDtoListType();
-
-        return modelMapper.map(currentWeatherDataList, weatherDataDtoListType);
+        return mapWeatherDataListToWeatherDataDtoList(currentWeatherDataList);
     }
 
-    private Type weatherDataDtoListType() {
-        return new TypeToken<List<WeatherDataDto>>() {}.getType();
+    private List<WeatherDataDto> mapWeatherDataListToWeatherDataDtoList(List<WeatherData> weatherDataList) {
+        final Type weatherDataDtoListType = new TypeToken<List<WeatherDataDto>>() {}.getType();
+
+        return modelMapper.map(weatherDataList, weatherDataDtoListType);
     }
 
-    private Optional<WeatherDataDto> mapOptWD2OptWDDto(Optional<WeatherData> optWeatherData) {
-        if (optWeatherData.isEmpty()) {
-            return Optional.empty();
+    private Optional<WeatherDataDto> mapOptWeatherDataToOptWeatherDataDto(Optional<WeatherData> optWeatherData) {
+
+        if (optWeatherData.isPresent()) {
+            final WeatherData weatherData = optWeatherData.get();
+            final WeatherDataDto weatherDataDto = modelMapper.map(weatherData, WeatherDataDto.class);
+            return Optional.of(weatherDataDto);
         }
-        final WeatherData weatherData = optWeatherData.get();
-        final WeatherDataDto weatherDataDto = modelMapper.map(weatherData, WeatherDataDto.class);
-        return Optional.of(weatherDataDto);
+
+        return Optional.empty();
     }
 }

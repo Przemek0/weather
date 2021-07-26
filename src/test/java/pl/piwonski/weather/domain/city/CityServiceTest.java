@@ -115,4 +115,17 @@ class CityServiceTest {
         //then
         verify(cityRepository, times(1)).deleteById(1L);
     }
+
+    @Test
+    void shouldReturnFalseWhenCityNotExists() {
+        //given
+        given(cityRepository.existsByName(eq("Warszawa")))
+                .willReturn(false);
+
+        //when
+        var result = cityService.existsByName("Warszawa");
+
+        //then
+        assertFalse(result);
+    }
 }

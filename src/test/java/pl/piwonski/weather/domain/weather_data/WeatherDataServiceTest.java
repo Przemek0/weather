@@ -158,8 +158,6 @@ class WeatherDataServiceTest {
     @Test
     void getCurrentWeatherByCityAndTime() {
         //given
-        LocalTime start = null;
-        LocalTime end = null;
         final String cityName = "City";
         final Type weatherDataDtoListType = getWeatherDataDtoListType();
         final List<WeatherData> weatherDataList = getWeatherDataList();
@@ -167,17 +165,15 @@ class WeatherDataServiceTest {
 
         final LocalDate nowDate = LocalDate.now(clock);
 
-        given(weatherDataRepository
-                .findAllByCity_NameAndTimeBetweenAndDateOrderByTimeDesc(
-                        eq(cityName), any(LocalTime.class), any(LocalTime.class), any(LocalDate.class)
-                )
-        ).willReturn(weatherDataList);
+        given(weatherDataRepository.findAllByCity_NameAndTimeBetweenAndDateOrderByTimeDesc(
+                eq(cityName), any(LocalTime.class), any(LocalTime.class), any(LocalDate.class)))
+                .willReturn(weatherDataList);
 
         given(modelMapper.map(weatherDataList, weatherDataDtoListType))
                 .willReturn(expectedResult);
 
         //when
-        var result = weatherDataService.getCurrentWeatherByCityAndTime(cityName, start, end);
+        var result = weatherDataService.getCurrentWeatherByCityAndTime(cityName, null, null);
 
         //then
         assertSame(expectedResult, result);

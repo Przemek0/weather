@@ -39,8 +39,8 @@ public class CountryService {
     public CountryDto update(int id, CountryDto newCountryDto) {
         final Country country = modelMapper.map(newCountryDto, Country.class);
         country.setId(id);
-        final Country save = countryRepository.save(country);
-        return modelMapper.map(save, CountryDto.class);
+        final Country savedCountry = countryRepository.save(country);
+        return modelMapper.map(savedCountry, CountryDto.class);
     }
 
     public void delete(int id) {
