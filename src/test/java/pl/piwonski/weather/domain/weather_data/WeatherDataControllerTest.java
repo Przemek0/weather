@@ -124,8 +124,6 @@ class WeatherDataControllerTest {
     void getHistoryWeatherReturnsBadRequestWrongDate() throws Exception {
         //given
         final String cityName = "City";
-        final LocalDate start = LocalDate.of(2021, 6, 30);
-        final LocalDate end = LocalDate.of(2021, 5, 1);
 
         given(cityService.existsByName(eq(cityName)))
                 .willReturn(true);
@@ -147,14 +145,12 @@ class WeatherDataControllerTest {
     void getHistoryWeatherReturnsListOfWeather() throws Exception {
         //given
         final String cityName = "City";
-        final LocalDate start = null;
-        final LocalDate end = null;
         final List<WeatherDataDto> weatherDataDtoList = List.of(fixtureWeatherData());
         final String json = objectMapper.writeValueAsString(weatherDataDtoList);
 
         given(cityService.existsByName(eq(cityName)))
                 .willReturn(true);
-        given(weatherDataService.getWeatherByCityAndDate(cityName, start, end))
+        given(weatherDataService.getWeatherByCityAndDate(cityName, null, null))
                 .willReturn(weatherDataDtoList);
 
         //when
@@ -193,8 +189,6 @@ class WeatherDataControllerTest {
     void getCurrentWeatherByTimeReturnsBadRequestWrongTime() throws Exception {
         //given
         final String cityName = "City";
-        final LocalTime start = LocalTime.MAX;
-        final LocalTime end = LocalTime.MIN;
 
         given(cityService.existsByName(eq(cityName)))
                 .willReturn(true);

@@ -6,10 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import pl.piwonski.weather.model.City;
 
-import java.lang.reflect.Type;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,7 +57,6 @@ class CityServiceTest {
         final City city = new City();
         final Optional<City> optCity = Optional.of(city);
         final CityDto expectedResult = new CityDto();
-        final Optional<CityDto> optCityDto = Optional.of(expectedResult);
 
         given(cityRepository.findById(eq(1L)))
                 .willReturn(optCity);
