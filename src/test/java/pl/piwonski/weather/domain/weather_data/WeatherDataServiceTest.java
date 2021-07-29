@@ -41,14 +41,17 @@ class WeatherDataServiceTest {
     }
 
     @Test
-    void create() {
+    void shouldCreateWeatherData() {
         //given
         final WeatherData weatherData = new WeatherData();
         final WeatherDataDto expectedResult = new WeatherDataDto();
 
-        given(modelMapper.map(expectedResult, WeatherData.class)).willReturn(weatherData);
-        given(weatherDataRepository.save(weatherData)).willReturn(weatherData);
-        given(modelMapper.map(weatherData, WeatherDataDto.class)).willReturn(expectedResult);
+        given(modelMapper.map(expectedResult, WeatherData.class))
+                .willReturn(weatherData);
+        given(weatherDataRepository.save(weatherData))
+                .willReturn(weatherData);
+        given(modelMapper.map(weatherData, WeatherDataDto.class))
+                .willReturn(expectedResult);
 
         //when
         var result = weatherDataService.create(expectedResult);
@@ -58,14 +61,16 @@ class WeatherDataServiceTest {
     }
 
     @Test
-    void read() {
+    void shouldReadNotEmptyOptionalWeatherData() {
         //given
         final WeatherData weatherData = new WeatherData();
         final Optional<WeatherData> optWeatherData = Optional.of(weatherData);
         final WeatherDataDto expectedResult = new WeatherDataDto();
 
-        given(weatherDataRepository.findById(eq(1L))).willReturn(optWeatherData);
-        given(modelMapper.map(weatherData, WeatherDataDto.class)).willReturn(expectedResult);
+        given(weatherDataRepository.findById(eq(1L)))
+                .willReturn(optWeatherData);
+        given(modelMapper.map(weatherData, WeatherDataDto.class))
+                .willReturn(expectedResult);
 
         //when
         var result = weatherDataService.read(1L);
@@ -76,14 +81,17 @@ class WeatherDataServiceTest {
     }
 
     @Test
-    void update() {
+    void shouldUpdateWeatherData() {
         //given
         final WeatherData weatherData = new WeatherData();
         final WeatherDataDto expectedResult = new WeatherDataDto();
 
-        given(modelMapper.map(expectedResult, WeatherData.class)).willReturn(weatherData);
-        given(weatherDataRepository.save(weatherData)).willReturn(weatherData);
-        given(modelMapper.map(weatherData, WeatherDataDto.class)).willReturn(expectedResult);
+        given(modelMapper.map(expectedResult, WeatherData.class))
+                .willReturn(weatherData);
+        given(weatherDataRepository.save(weatherData))
+                .willReturn(weatherData);
+        given(modelMapper.map(weatherData, WeatherDataDto.class))
+                .willReturn(expectedResult);
 
         //when
         var result = weatherDataService.update(1L, expectedResult);
@@ -93,7 +101,7 @@ class WeatherDataServiceTest {
     }
 
     @Test
-    void delete() {
+    void shouldDeleteWeatherDataAndVerifyMethodWasCalledOneTime() {
         //given
 
         //when
@@ -104,7 +112,7 @@ class WeatherDataServiceTest {
     }
 
     @Test
-    void getCurrentWeatherByCity() {
+    void shouldReadNotEmptyOptionalCurrentWeatherDataDto() {
         //given
         final WeatherData weatherData = new WeatherData();
         final Optional<WeatherData> optWeatherData = Optional.of(weatherData);
@@ -120,20 +128,18 @@ class WeatherDataServiceTest {
         var result = weatherDataService
                 .getCurrentWeatherByCity("City");
 
-        var result2 = weatherDataService
+        var resultEmptyOpt = weatherDataService
                 .getCurrentWeatherByCity("");
 
         //then
-        assertFalse(result2.isPresent());
+        assertFalse(resultEmptyOpt.isPresent());
         assertTrue(result.isPresent());
         assertSame(expectedResult, result.get());
     }
 
     @Test
-    void getWeatherByCityAndDate() {
+    void shouldReadWeatherDataByCityAndDateAndReturnsListOfWeatherDataDto() {
         //given
-        LocalDate start = null;
-        LocalDate end = null;
         final String cityName = "City";
         final Type weatherDataDtoListType = getWeatherDataDtoListType();
         final List<WeatherData> weatherDataList = getWeatherDataList();
@@ -142,28 +148,26 @@ class WeatherDataServiceTest {
         given(weatherDataRepository
                 .findAllByCity_NameAndDateBetweenOrderByDateDescTimeDesc(
                         eq(cityName), any(LocalDate.class), any(LocalDate.class)
-                )
-        ).willReturn(weatherDataList);
+                ))
+                .willReturn(weatherDataList);
 
         given(modelMapper.map(weatherDataList, weatherDataDtoListType))
                 .willReturn(expectedResult);
 
         //when
-        var result = weatherDataService.getWeatherByCityAndDate(cityName, start, end);
+        var result = weatherDataService.getWeatherByCityAndDate(cityName, null, null);
 
         //then
         assertSame(expectedResult, result);
     }
 
     @Test
-    void getCurrentWeatherByCityAndTime() {
+    void shouldReadCurrentWeatherByCityAndTimeReturnsListOfWeatherDataDto() {
         //given
         final String cityName = "City";
         final Type weatherDataDtoListType = getWeatherDataDtoListType();
         final List<WeatherData> weatherDataList = getWeatherDataList();
         final List<WeatherDataDto> expectedResult = getExpectedResult();
-
-        final LocalDate nowDate = LocalDate.now(clock);
 
         given(weatherDataRepository.findAllByCity_NameAndTimeBetweenAndDateOrderByTimeDesc(
                 eq(cityName), any(LocalTime.class), any(LocalTime.class), any(LocalDate.class)))

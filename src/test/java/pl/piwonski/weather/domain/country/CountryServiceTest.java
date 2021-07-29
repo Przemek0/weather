@@ -6,10 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import pl.piwonski.weather.model.Country;
 
-import java.lang.reflect.Type;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,7 +54,6 @@ class CountryServiceTest {
         final Country country = new Country();
         final Optional<Country> optCountry = Optional.of(country);
         final CountryDto expectedResult = new CountryDto();
-        final Optional<CountryDto> optCountryDto = Optional.of(expectedResult);
 
         given(countryRepository.findById(eq(1)))
                 .willReturn(optCountry);
